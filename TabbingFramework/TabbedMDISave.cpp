@@ -57,7 +57,7 @@
 #include "TabbedMDISave.h"
 
 #if (_WIN32_WINNT >= 0x0501)
-	#include <atltheme.h>
+	#include <wtl/atltheme.h>
 #endif
 
 #if (_ATL_VER < 0x0700)
@@ -1466,7 +1466,7 @@ _CSTRING_NS::CString CSaveModifiedItemsDialog::FormatLastModifiedDateString(DATE
 		}
 		else if(dayOfYearDifference == 1)
 		{
-			lastModifiedString.Format(_T("Yesterday, %s"), timeString);
+			lastModifiedString.Format(_T("Yesterday, %s"), (LPCTSTR) timeString);
 		}
 		else if(hourDifference >= 1)
 		{

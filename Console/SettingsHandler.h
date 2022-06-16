@@ -666,7 +666,7 @@ struct HotKeys : public SettingsBase
         if (this->accelHotkey.fVirt & FCONTROL)
         {
           lScanCode = ::MapVirtualKey(VK_CONTROL, 0) << 16;
-          if( ::GetKeyNameText(lScanCode, szKeyName, ARRAYSIZE(szKeyName)) )
+          if( ::GetKeyNameText(lScanCode, (LPSTR)szKeyName, ARRAYSIZE(szKeyName)) )
             strHotKeyName += szKeyName;
           strHotKeyName += L"+";
         }
@@ -674,7 +674,7 @@ struct HotKeys : public SettingsBase
         if (this->accelHotkey.fVirt & FSHIFT)
         {
           lScanCode = ::MapVirtualKey(VK_SHIFT, 0) << 16;
-          if( ::GetKeyNameText(lScanCode, szKeyName, ARRAYSIZE(szKeyName)) )
+          if( ::GetKeyNameText(lScanCode, (LPSTR)szKeyName, ARRAYSIZE(szKeyName)) )
             strHotKeyName += szKeyName;
           strHotKeyName += L"+";
         }
@@ -682,7 +682,7 @@ struct HotKeys : public SettingsBase
         if (this->accelHotkey.fVirt & FALT)
         {
           lScanCode = ::MapVirtualKey(VK_MENU, 0) << 16;
-          if( ::GetKeyNameText(lScanCode, szKeyName, ARRAYSIZE(szKeyName)) )
+          if( ::GetKeyNameText(lScanCode, (LPSTR)szKeyName, ARRAYSIZE(szKeyName)) )
             strHotKeyName += szKeyName;
           strHotKeyName += L"+";
         }
@@ -690,7 +690,7 @@ struct HotKeys : public SettingsBase
         lScanCode = ::MapVirtualKey(this->accelHotkey.key, 0) << 16;
         if (this->bExtended) lScanCode |= 0x01000000L;
 
-        if( ::GetKeyNameText(lScanCode, szKeyName, ARRAYSIZE(szKeyName)) )
+        if( ::GetKeyNameText(lScanCode, (LPSTR)szKeyName, ARRAYSIZE(szKeyName)) )
         {
           // it's used in menu, so we double &
           if (szKeyName[0] == L'&')

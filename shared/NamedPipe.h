@@ -109,7 +109,7 @@ class NamedPipe
 
 			m_hNamedPipe.reset(
 				::CreateNamedPipe(
-					m_strName.c_str(),
+					(LPTSTR)m_strName.c_str(),
 					PIPE_ACCESS_OUTBOUND | FILE_FLAG_FIRST_PIPE_INSTANCE | FILE_FLAG_OVERLAPPED,
 					PIPE_TYPE_BYTE,
 					1,
@@ -150,7 +150,7 @@ class NamedPipe
 
 			m_hNamedPipe.reset(
 				::CreateFile(
-					m_strName.c_str(),
+					(LPTSTR)m_strName.c_str(),
 					GENERIC_READ,
 					0,
 					NULL,

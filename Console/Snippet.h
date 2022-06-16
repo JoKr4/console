@@ -83,7 +83,7 @@ public:
 	{
 		std::wstring id;
 		std::wstring toolTip;
-		std::wstring default;
+		std::wstring _default;
 	};
 
 	struct Code

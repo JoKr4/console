@@ -1,0 +1,104 @@
+project(Console)
+
+add_executable(
+  ${PROJECT_NAME}
+    AboutDlg.cpp
+    AboutDlg.h
+    AeroTabCtrl.h
+    CFileNameEdit.h
+    CNegativeNumberEdit.h
+    config.rc
+    Console.cpp
+    Console.h
+    Console.rc
+    ConsoleException.h
+    ConsoleHandler.cpp
+    ConsoleHandler.h
+    ConsoleView.cpp
+    ConsoleView.h
+    Cursors.cpp
+    Cursors.h
+    DlgCredentials.cpp
+    DlgCredentials.h
+    DlgRenameTab.cpp
+    DlgRenameTab.h
+    DlgSettingsAppearance.cpp
+    DlgSettingsAppearance.h
+    DlgSettingsBase.h
+    DlgSettingsBehavior.cpp
+    DlgSettingsBehavior.h
+    DlgSettingsBehavior2.cpp
+    DlgSettingsBehavior2.h
+    DlgSettingsConsole.cpp
+    DlgSettingsConsole.h
+    DlgSettingsControls.cpp
+    DlgSettingsControls.h
+    DlgSettingsFont.cpp
+    DlgSettingsFont.h
+    DlgSettingsFullScreen.cpp
+    DlgSettingsFullScreen.h
+    DlgSettingsHotkeys.cpp
+    DlgSettingsHotkeys.h
+    DlgSettingsMain.cpp
+    DlgSettingsMain.h
+    DlgSettingsMouse.cpp
+    DlgSettingsMouse.h
+    DlgSettingsStyles.cpp
+    DlgSettingsStyles.h
+    DlgSettingsTabs.cpp
+    DlgSettingsTabs.h
+    DlgSettingsTransparency.cpp
+    DlgSettingsTransparency.h
+    DynamicDialog.h
+    DynamicSnippetDialog.h
+    FastDelegate.h
+    Helpers.cpp
+    Helpers.h
+    HotkeyEdit.h
+    ImageHandler.cpp
+    ImageHandler.h
+    JumpList.cpp
+    JumpList.h
+    MainFrame.cpp
+    MainFrame.h
+    multisplit.h
+    PageSettingsTab.h
+    PageSettingsTabs1.cpp
+    PageSettingsTabs1.h
+    PageSettingsTabs2.cpp
+    PageSettingsTabs2.h
+    PageSettingsTabsColors.cpp
+    PageSettingsTabsColors.h
+    PageSettingsTabsEnv.cpp
+    PageSettingsTabsEnv.h
+    resource.h
+    SelectionHandler.cpp
+    SelectionHandler.h
+    SettingsHandler.cpp
+    SettingsHandler.h
+    Snippet.cpp
+    Snippet.h
+    stdafx.cpp
+    TabView.cpp
+    TabView.h
+    Wallpaper.cpp
+    Wallpaper.h
+    wtlaero.h
+    XmlHelper.cpp
+    XmlHelper.h
+)
+
+target_precompile_headers(
+  ${PROJECT_NAME}
+  PUBLIC
+    stdafx.h
+)
+
+target_link_libraries(
+  ${PROJECT_NAME}
+  PUBLIC
+    wtl
+    TabbingFramework
+    shared
+    Boost::boost
+)

@@ -56,7 +56,10 @@ class Helpers
 
 		static std::wstring LoadString(UINT uID);
 		static std::wstring LoadFileFilter(UINT uID);
+
+		#ifdef _USE_AERO
 		static void LoadCombo(CComboBox& cb, UINT uID);
+		#endif
 
 		static HICON LoadTabIcon(bool bBigIcon, bool bUseDefaultIcon, const std::wstring& strIcon, const std::wstring& strShell);
 		static HICON LoadIcon(bool bBigIcon, const std::wstring& strIcon);

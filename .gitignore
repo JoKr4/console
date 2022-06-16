@@ -30,3 +30,5 @@ l10n/*/*.ucs2.rc
 icons/*/
 
 Backup/
+
+_build/
