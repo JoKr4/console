@@ -151,18 +151,14 @@ LRESULT DlgSettingsTabs::OnTabTitleChanged(UINT /*uMsg*/, WPARAM /*wParam*/, LPA
 LRESULT DlgSettingsTabs::OnTabIconChanged(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
   bool         bUseDefaultIcon = m_page1.UseDefaultIcon() ? true : false;
-  std::wstring strIcon         = m_page1.GetTabIcon();
-  std::wstring strShell        = m_page1.GetTabShell();
+  auto strIcon         = m_page1.GetTabIcon();
+  auto strShell        = m_page1.GetTabShell();
 
 	CIcon tabSmallIcon(Helpers::LoadTabIcon(
 		false,
 		bUseDefaultIcon,
-		strIcon,
-		strShell.empty() ?
-			( m_consoleSettings.strShell.empty() ?
-					L"%ComSpec%" :
-					m_consoleSettings.strShell ) :
-			strShell));
+		strIcon.GetString(),
+		 strShell.IsEmpty() ? ( m_consoleSettings.strShell.empty() ? L"%ComSpec%" : m_consoleSettings.strShell ) : strShell.GetString()));
 
   int nIcon = tabSmallIcon.m_hIcon? m_ImageList.AddIcon(tabSmallIcon.m_hIcon) : -1;
   // list control is not refreshed when an empty icon is set ...

@@ -46,7 +46,6 @@ extern CAppModule _Module;
 #include <wtl/atldlgs.h>
 #include <wtl/atlctrlw.h>
 #include <wtl/atlctrlx.h>
-#pragma warning(pop)
 
 #include <userenv.h>
 #include <Lm.h>

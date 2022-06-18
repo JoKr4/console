@@ -61,7 +61,7 @@ bool Snippet::load(const CComPtr<IXMLDOMElement>& xmlElementSnippet)
 				// ToolTip
 				if( !(XmlHelper::GetChildNodeText(xmlElementLiteral, CComBSTR(L"ToolTip"), literal->toolTip)) ) continue;
 				// Default
-				if( !(XmlHelper::GetChildNodeText(xmlElementLiteral, CComBSTR(L"Default"), literal->default)) ) continue;
+				if( !(XmlHelper::GetChildNodeText(xmlElementLiteral, CComBSTR(L"Default"), literal->_default)) ) continue;
 
 				this->m_declarations.push_back(literal);
 			}

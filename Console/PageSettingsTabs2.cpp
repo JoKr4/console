@@ -35,7 +35,10 @@ LRESULT PageSettingsTabs2::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM
 	if (CTheme().IsThemingSupported()) ::EnableThemeDialogTexture(m_hWnd, ETDT_USETABTEXTURE);
 
 	m_comboBkPosition.Attach(GetDlgItem(IDC_COMBO_BK_POS));
+
+	#ifdef _USE_AERO
 	Helpers::LoadCombo(m_comboBkPosition, IDC_COMBO_BK_POS);
+	#endif
 
 	m_staticTintOpacity.Attach(GetDlgItem(IDC_TINT_OPACITY_VAL));
 	m_sliderTintOpacity.Attach(GetDlgItem(IDC_TINT_OPACITY));

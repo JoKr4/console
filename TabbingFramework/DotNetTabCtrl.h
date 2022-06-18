@@ -1015,7 +1015,7 @@ public:
 
 		//DWORD dwStyle = this->GetStyle();
 
-		WTL::CClientDC dc(m_hWnd);
+		WTL::CClientDC dc(this->m_hWnd);
 		//HFONT hOldFont = dc.SelectFont(lpNMCustomDraw->hFontInactive);
 		HFONT hOldFont = dc.SelectFont(m_font);
 
@@ -1164,7 +1164,7 @@ public:
 		RECT rcClient;
 		this->GetClientRect(&rcClient);
 
-		WTL::CClientDC dc(m_hWnd);
+		WTL::CClientDC dc(this->m_hWnd);
 		//HFONT hOldFont = dc.SelectFont(lpNMCustomDraw->hFontInactive);
 		HFONT hOldFont = dc.SelectFont(m_font);
 

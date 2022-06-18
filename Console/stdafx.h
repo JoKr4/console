@@ -77,10 +77,9 @@ using namespace boost::multi_index;
 #include <netlistmgr.h>
 #endif
 
+#include "../shared/Win32Exception.h"
 #include "../shared/SharedMemory.h"
 #include "../shared/Structures.h"
-
-#include "../shared/Win32Exception.h"
 #include "../shared/Cpp11Helpers.h"
 #include "../shared/NamedPipe.h"
 

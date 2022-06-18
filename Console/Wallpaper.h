@@ -2,6 +2,7 @@
 
 #include "MainFrame.h"
 
+
 class MyThread
 {
 public:
@@ -13,11 +14,13 @@ public:
   virtual DWORD             Process                             (HANDLE hStopSignal) = 0;
 
 private:
+  static unsigned int __stdcall myThreadFunction(void*);
+
+private:
   std::unique_ptr<void, CloseHandleHelper> hStopSignalPtr;
   std::unique_ptr<void, CloseHandleHelper> hThreadPtr;
   DWORD                                    dwResult;
 
-  friend unsigned int __stdcall _MyThreadFunction               (void*);
 };
 
 

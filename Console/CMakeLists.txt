@@ -99,6 +99,6 @@ target_link_libraries(
   PUBLIC
     wtl
     TabbingFramework
-    shared
     Boost::boost
+    shared
 )

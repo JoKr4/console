@@ -1,5 +1,5 @@
-#include "StdAfx.h"
-#include "WallPaper.h"
+#include "stdafx.h"
+#include "Wallpaper.h"
 
 #pragma warning(disable:4996)
 
@@ -32,7 +32,7 @@ void MyThread::Start(DWORD dwStackSize /*= 0*/)
   if( this->hStopSignalPtr.get() == nullptr )
     Win32Exception::ThrowFromLastError("CreateEvent");
 
-  this->hThreadPtr.reset((HANDLE)_beginthreadex(0, dwStackSize, &_MyThreadFunction, (void*)this, 0, NULL));
+  this->hThreadPtr.reset((HANDLE)_beginthreadex(0, dwStackSize, myThreadFunction, (void*)this, 0, NULL));
   if( this->hThreadPtr.get() == nullptr )
     throw std::exception(_sys_errlist[errno]);
 }
@@ -63,7 +63,7 @@ DWORD MyThread::Stop(DWORD dwTimeout)
   return this->dwResult;
 }
 
-unsigned int __stdcall _MyThreadFunction(void* arg)
+unsigned int __stdcall MyThread::myThreadFunction(void* arg)
 {
   MyThread* pThread = static_cast<MyThread*>(arg);
 

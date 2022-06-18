@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "Console.h"
 extern int g_nIconSize;
@@ -421,6 +421,7 @@ std::wstring Helpers::LoadFileFilter(UINT uID)
 	return str;
 }
 
+#ifdef _USE_AERO
 void Helpers::LoadCombo(CComboBox& cb, UINT uID)
 {
 	std::wstring combo = Helpers::LoadStringW(uID);
@@ -434,6 +435,7 @@ void Helpers::LoadCombo(CComboBox& cb, UINT uID)
 			cb.AddString(tok_iter->c_str());
 	}
 }
+#endif
 
 //////////////////////////////////////////////////////////////////////////////
 

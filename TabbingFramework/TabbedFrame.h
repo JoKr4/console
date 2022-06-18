@@ -133,7 +133,7 @@
 //     (gets rid of CS_DBLCLKS, CS_HREDRAW and CS_VREDRAW, sets background brush)
 //   * Support "empty" tabbed frame (have window class brush, 
 //     let default handling of WM_ERASEBKGND happen if no active view,
-//     and NULL out m_hWndActive in OnRemoveLastTab).
+//     and NULL out this->m_hWndActive in OnRemoveLastTab).
 // - CTabbedPopupFrame -
 //   * Replace
 //      DECLARE_FRAME_WND_CLASS(_T("TabbedPopupFrame"), 0)
@@ -176,7 +176,7 @@
 //   (and the new CTabbedChildWindow)
 // - CCustomTabOwnerImpl -
 //   * Rename "GetTabs" method to "GetTabCtrl"
-//   * Rename member "m_tabs" to "m_TabCtrl"
+//   * Rename member "m_tabs" to "this->m_TabCtrl"
 //   * Rename template argument "TTab" to "TTabCtrl"
 //   * Rename "ShowTabs" and "HideTabs" overrideables to "OnAddFirstTab" and "OnRemoveLastTab",
 //     and change the place that calls these to live up to those new names
@@ -251,7 +251,7 @@ public:
 		m_nTabAreaHeight(::GetSystemMetrics(SM_CYSMICON) * 3 / 2),
 		m_nMinTabCountForVisibleTabs(1)
 	{
-		m_bKeepTabsHidden = (m_nMinTabCountForVisibleTabs > 0);
+		this->m_bKeepTabsHidden = (this->m_nMinTabCountForVisibleTabs > 0);
 	}
 
 // Overrideables
@@ -262,7 +262,7 @@ public:
 		T* pT = static_cast<T*>(this);
 
 		// NOTE: Derived classes should call this base class version as well
-		if(nNewTabCount == m_nMinTabCountForVisibleTabs)
+		if(nNewTabCount == this->m_nMinTabCountForVisibleTabs)
 		{
 			pT->ShowTabControl();
 		}
@@ -273,7 +273,7 @@ public:
 		T* pT = static_cast<T*>(this);
 
 		// NOTE: Derived classes should call this base class version as well
-		if((nNewTabCount+1) == m_nMinTabCountForVisibleTabs)
+		if((nNewTabCount+1) == this->m_nMinTabCountForVisibleTabs)
 		{
 			pT->HideTabControl();
 		}
@@ -285,9 +285,9 @@ public:
 
 	void KeepTabsHidden(bool bKeepTabsHidden = true)
 	{
-		if(m_bKeepTabsHidden != bKeepTabsHidden)
+		if(this->m_bKeepTabsHidden != bKeepTabsHidden)
 		{
-			m_bKeepTabsHidden = bKeepTabsHidden;
+			this->m_bKeepTabsHidden = bKeepTabsHidden;
 
 			// CalcTabAreaHeight will end up doing UpdateLayout and Invalidate
 			T* pT = static_cast<T*>(this);
@@ -309,9 +309,9 @@ public:
 
 	void SetTabAreaHeight(int nNewTabAreaHeight)
 	{
-		if(m_nTabAreaHeight != nNewTabAreaHeight)
+		if(this->m_nTabAreaHeight != nNewTabAreaHeight)
 		{
-			m_nTabAreaHeight = nForceTabAreaHeight;
+			this->m_nTabAreaHeight = nNewTabAreaHeight;
 
 			/*
 			T* pT = static_cast<T*>(this);
@@ -368,22 +368,22 @@ public:
 public:
 	TTabCtrl& GetTabCtrl(void)
 	{
-		return m_TabCtrl;
+		return this->m_TabCtrl;
 	}
 
 	int GetTabAreaHeight(void) const
 	{
-		return m_nTabAreaHeight;
+		return this->m_nTabAreaHeight;
 	}
 
 	void SetMinTabCountForVisibleTabs(size_t nMinTabCountForVisibleTabs)
 	{
-		if(m_nMinTabCountForVisibleTabs != nMinTabCountForVisibleTabs)
+		if(this->m_nMinTabCountForVisibleTabs != nMinTabCountForVisibleTabs)
 		{
 			T* pT = static_cast<T*>(this);
-			m_nMinTabCountForVisibleTabs = nMinTabCountForVisibleTabs;
-			size_t nCurrentTabCount = m_TabCtrl.GetItemCount();
-			if(nCurrentTabCount < m_nMinTabCountForVisibleTabs)
+			this->m_nMinTabCountForVisibleTabs = nMinTabCountForVisibleTabs;
+			size_t nCurrentTabCount = this->m_TabCtrl.GetItemCount();
+			if(nCurrentTabCount < this->m_nMinTabCountForVisibleTabs)
 			{
 				pT->HideTabControl();
 			}
@@ -396,21 +396,21 @@ public:
 
 	void CreateTabWindow(HWND hWndTabParent, RECT rcTab, DWORD dwOtherStyles = CTCS_TOOLTIPS)
 	{
-		if(m_TabCtrl.IsWindow())
+		if(this->m_TabCtrl.IsWindow())
 		{
-			m_TabCtrl.DestroyWindow();
+			this->m_TabCtrl.DestroyWindow();
 		}
 
 		BOOL bCreate = FALSE;
 		bCreate = m_ImageList.Create(m_cxImage, m_cyImage, ILC_COLOR32 | ILC_MASK, 4, 4);
 		if(bCreate)
 		{
-			m_TabCtrl.SetImageList(m_ImageList);
+			this->m_TabCtrl.SetImageList(m_ImageList);
 		}
 
 		DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | dwOtherStyles;
 
-		m_TabCtrl.Create(hWndTabParent, rcTab, NULL, dwStyle);
+		this->m_TabCtrl.Create(hWndTabParent, rcTab, NULL, dwStyle);
 
 		T* pT = static_cast<T*>(this);
 		pT->CalcTabAreaHeight();
@@ -554,7 +554,7 @@ public:
 
 		int nNewTabIndex = -1;
 
-		TTabCtrl::TItem* pItem = m_TabCtrl.CreateNewItem();
+		auto pItem = this->m_TabCtrl.CreateNewItem();
 		if(pItem)
 		{
 			pItem->SetText(sTabText);
@@ -563,12 +563,12 @@ public:
 			//  that tracks a view HWND, such as CTabViewTabItem
 			pItem->SetTabView(hWnd);
 
-			size_t nOldCount = m_TabCtrl.GetItemCount();
+			size_t nOldCount = this->m_TabCtrl.GetItemCount();
 
 			// The tab control takes ownership of the new item
-			nNewTabIndex = m_TabCtrl.InsertItem(nOldCount, pItem);
+			nNewTabIndex = this->m_TabCtrl.InsertItem(nOldCount, pItem);
 
-			size_t nNewCount = m_TabCtrl.GetItemCount();
+			size_t nNewCount = this->m_TabCtrl.GetItemCount();
 
 			if((nOldCount+1) == nNewCount)
 			{
@@ -585,10 +585,10 @@ public:
 		int nTab = -1;
 		if(hWnd)
 		{
-			TTabCtrl::TItem tcItem;
+			typename TTabCtrl::TItem tcItem;
 			tcItem.SetTabView(hWnd);
 
-			nTab = m_TabCtrl.FindItem(&tcItem, CTFI_TABVIEW);
+			nTab = this->m_TabCtrl.FindItem(&tcItem, CTFI_TABVIEW);
 			if((bAddIfNotFound == TRUE) && (nTab < 0))
 			{
 				// The corresponding tab doesn't exist yet. Create it.
@@ -658,7 +658,7 @@ public:
 
 			if(nTab >= 0)
 			{
-				m_TabCtrl.SetCurSel(nTab);
+				this->m_TabCtrl.SetCurSel(nTab);
 			}
 
 		}
@@ -670,17 +670,17 @@ public:
 	{
 		BOOL bSuccess = FALSE;
 
-		TTabCtrl::TItem tcItem;
+		typename TTabCtrl::TItem tcItem;
 		tcItem.SetTabView(hWnd);
 
-		int nTab = m_TabCtrl.FindItem(&tcItem, CTFI_TABVIEW);
+		int nTab = this->m_TabCtrl.FindItem(&tcItem, CTFI_TABVIEW);
 		if(nTab >= 0)
 		{
-			size_t nOldCount = m_TabCtrl.GetItemCount();
+			size_t nOldCount = this->m_TabCtrl.GetItemCount();
 
-			bSuccess = m_TabCtrl.DeleteItem(nTab);
+			bSuccess = this->m_TabCtrl.DeleteItem(nTab);
 
-			size_t nNewCount = m_TabCtrl.GetItemCount();
+			size_t nNewCount = this->m_TabCtrl.GetItemCount();
 
 			T* pT = static_cast<T*>(this);
 			if((nOldCount-1) == nNewCount)
@@ -696,13 +696,13 @@ public:
 	{
 		BOOL bSuccess = FALSE;
 
-		TTabCtrl::TItem tcItem;
+		typename TTabCtrl::TItem tcItem;
 		tcItem.SetTabView(hWnd);
 
-		int nTab = m_TabCtrl.FindItem(&tcItem, CTFI_TABVIEW);
+		int nTab = this->m_TabCtrl.FindItem(&tcItem, CTFI_TABVIEW);
 		if(nTab >= 0)
 		{
-			TTabCtrl::TItem* pItem = m_TabCtrl.GetItem(nTab);
+			auto pItem = this->m_TabCtrl.GetItem(nTab);
 			_CSTRING_NS::CString sCurrentTabText = pItem->GetText();
 
 			if(sText != NULL)
@@ -710,8 +710,8 @@ public:
 				if(sCurrentTabText != sText)
 				{
 					bSuccess = pItem->SetText(sText);
-					m_TabCtrl.UpdateLayout();
-					m_TabCtrl.Invalidate();
+					this->m_TabCtrl.UpdateLayout();
+					this->m_TabCtrl.Invalidate();
 				}
 			}
 			else
@@ -729,8 +729,8 @@ public:
 							sCurrentTabText != sWindowText)
 						{
 							bSuccess = pItem->SetText(sWindowText);
-							m_TabCtrl.UpdateLayout();
-							m_TabCtrl.Invalidate();
+							this->m_TabCtrl.UpdateLayout();
+							this->m_TabCtrl.Invalidate();
 						}
 
 						delete [] sWindowText;
@@ -746,13 +746,13 @@ public:
 	{
 		BOOL bSuccess = FALSE;
 
-		TTabCtrl::TItem tcItem;
+		typename TTabCtrl::TItem tcItem;
 		tcItem.SetTabView(hWnd);
 
-		int nTab = m_TabCtrl.FindItem(&tcItem, CTFI_TABVIEW);
+		int nTab = this->m_TabCtrl.FindItem(&tcItem, CTFI_TABVIEW);
 		if( nTab >= 0 )
 		{
-			TTabCtrl::TItem* pItem = m_TabCtrl.GetItem(nTab);
+			auto pItem = this->m_TabCtrl.GetItem(nTab);
 
 			unsigned long long ullOldProgressCompleted = pItem->GetProgressCompleted();
 			unsigned long long ullOldProgressTotal     = pItem->GetProgressTotal();
@@ -761,8 +761,8 @@ public:
 
 			if( ullOldProgressCompleted != ullProgressCompleted || ullOldProgressTotal != ullProgressTotal )
 			{
-				m_TabCtrl.UpdateLayout();
-				m_TabCtrl.Invalidate();
+				this->m_TabCtrl.UpdateLayout();
+				this->m_TabCtrl.Invalidate();
 			}
 
 			bSuccess = TRUE;
@@ -775,19 +775,19 @@ public:
 	{
 		BOOL bSuccess = FALSE;
 
-		TTabCtrl::TItem tcItem;
+		typename TTabCtrl::TItem tcItem;
 		tcItem.SetTabView(hWnd);
 
-		int nTab = m_TabCtrl.FindItem(&tcItem, CTFI_TABVIEW);
+		int nTab = this->m_TabCtrl.FindItem(&tcItem, CTFI_TABVIEW);
 		if(nTab >= 0)
 		{
-			TTabCtrl::TItem* pItem = m_TabCtrl.GetItem(nTab);
+			auto pItem = this->m_TabCtrl.GetItem(nTab);
 			int nCurrentImageIndex = pItem->GetImageIndex();
 			if(nCurrentImageIndex != nImageIndex)
 			{
 				bSuccess = pItem->SetImageIndex(nImageIndex);
-				m_TabCtrl.UpdateLayout();
-				m_TabCtrl.Invalidate();
+				this->m_TabCtrl.UpdateLayout();
+				this->m_TabCtrl.Invalidate();
 			}
 		}
 
@@ -798,13 +798,13 @@ public:
 	{
 		BOOL bSuccess = FALSE;
 
-		TTabCtrl::TItem tcItem;
+		typename TTabCtrl::TItem tcItem;
 		tcItem.SetTabView(hWnd);
 
-		int nTab = m_TabCtrl.FindItem(&tcItem, CTFI_TABVIEW);
+		int nTab = this->m_TabCtrl.FindItem(&tcItem, CTFI_TABVIEW);
 		if(nTab >= 0)
 		{
-			TTabCtrl::TItem* pItem = m_TabCtrl.GetItem(nTab);
+			auto pItem = this->m_TabCtrl.GetItem(nTab);
 			_CSTRING_NS::CString sCurrentToolTip = pItem->GetToolTip();
 			if(sCurrentToolTip != sToolTip)
 			{
@@ -819,13 +819,13 @@ public:
 	{
 		BOOL bSuccess = FALSE;
 
-		TTabCtrl::TItem tcItem;
+		typename TTabCtrl::TItem tcItem;
 		tcItem.SetTabView(hWnd);
 
-		int nTab = m_TabCtrl.FindItem(&tcItem, CTFI_TABVIEW);
+		int nTab = this->m_TabCtrl.FindItem(&tcItem, CTFI_TABVIEW);
 		if(nTab >= 0)
 		{
-			bSuccess = m_TabCtrl.HighlightItem((size_t)nTab, bHighlight);
+			bSuccess = this->m_TabCtrl.HighlightItem((size_t)nTab, bHighlight);
 		}
 
 		return bSuccess;
@@ -835,19 +835,19 @@ public:
 	{
 		BOOL bSuccess = FALSE;
 
-		TTabCtrl::TItem tcItem;
+		typename TTabCtrl::TItem tcItem;
 		tcItem.SetTabView(hWnd);
 
-		int nTab = m_TabCtrl.FindItem(&tcItem, CTFI_TABVIEW);
+		int nTab = this->m_TabCtrl.FindItem(&tcItem, CTFI_TABVIEW);
 		if(nTab >= 0)
 		{
-			TTabCtrl::TItem* pItem = m_TabCtrl.GetItem(nTab);
+			auto pItem = this->m_TabCtrl.GetItem(nTab);
 			bool bCurrentCanClose = pItem->CanClose();
 			if(bCurrentCanClose != bCanClose)
 			{
 				bSuccess = pItem->SetCanClose(bCanClose);
-				m_TabCtrl.UpdateLayout();
-				m_TabCtrl.Invalidate();
+				this->m_TabCtrl.UpdateLayout();
+				this->m_TabCtrl.Invalidate();
 			}
 		}
 
@@ -862,8 +862,8 @@ public:
 /////////////////////////////////////////////////////////////////////////////
 
 #define CHAIN_ACTIVETABVIEW_COMMANDS() \
-	if(uMsg == WM_COMMAND && m_hWndActive != NULL) \
-		::SendMessage(m_hWndActive, uMsg, wParam, lParam);
+	if(uMsg == WM_COMMAND && this->m_hWndActive != NULL) \
+		::SendMessage(this->m_hWndActive, uMsg, wParam, lParam);
 
 #define CHAIN_ACTIVETABVIEW_CHILD_COMMANDS(tabClass) \
 	if(uMsg == WM_COMMAND) \
@@ -915,8 +915,8 @@ public:
 		m_nTabStyles(CTCS_BOTTOM | CTCS_TOOLTIPS),
 		m_hWndActive(NULL)
 	{
-		m_nMinTabCountForVisibleTabs = 1;
-		m_bKeepTabsHidden = (m_nMinTabCountForVisibleTabs > 0);
+		this->m_nMinTabCountForVisibleTabs = 1;
+		this->m_bKeepTabsHidden = (this->m_nMinTabCountForVisibleTabs > 0);
 	}
 
 // Methods
@@ -962,7 +962,7 @@ public:
 
 	HWND GetActiveView(void) const
 	{
-		return m_hWndActive;
+		return this->m_hWndActive;
 	}
 
 	virtual void OnFinalMessage(HWND /*hWnd*/)
@@ -1001,9 +1001,9 @@ public:
 		// pass those along to the active child window
 		if(uMsg >= WM_KEYFIRST && uMsg <= WM_KEYLAST)
 		{
-			if(m_hWndActive != NULL && ::IsWindow(m_hWndActive))
+			if(this->m_hWndActive != NULL && ::IsWindow(this->m_hWndActive))
 			{
-				lResult = ::SendMessage(m_hWndActive, uMsg, wParam, lParam);
+				lResult = ::SendMessage(this->m_hWndActive, uMsg, wParam, lParam);
 
 				return TRUE;
 			}
@@ -1034,7 +1034,7 @@ public:
 		// the window class (DECLARE_FRAME_WND_CLASS_EX)
 		//::SetClassLongPtr(m_hWnd, GCLP_HBRBACKGROUND, COLOR_APPWORKSPACE+1);
 
-		this->CreateTabWindow(m_hWnd, rcDefault, m_nTabStyles);
+		this->CreateTabWindow(this->m_hWnd, this->rcDefault, m_nTabStyles);
 
 		return 0;
 	}
@@ -1055,7 +1055,7 @@ public:
 		//  so that it can adjust its font metrics first.
 		// NOTE: This causes the tab to get the WM_SETTINGCHANGE message twice,
 		//  but that's OK.
-		m_TabCtrl.SendMessage(uMsg, wParam, lParam);
+		this->m_TabCtrl.SendMessage(uMsg, wParam, lParam);
 
 		T* pT = static_cast<T*>(this);
 		pT->CalcTabAreaHeight();
@@ -1066,7 +1066,7 @@ public:
 
 	LRESULT OnEraseBackground(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
 	{
-		if(m_hWndActive)
+		if(this->m_hWndActive)
 		{
 			// Let the active view and the tabs do all the drawing
 			// as flicker-free as possible.
@@ -1084,15 +1084,15 @@ public:
 
 	LRESULT OnSetFocus(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
 	{
-		// NOTE: ::IsWindowVisible(m_hWndActive) will be false if
+		// NOTE: ::IsWindowVisible(this->m_hWndActive) will be false if
 		//  the frame is maximized.  So just use "IsWindow" instead.
-		if(m_hWndActive != NULL && ::IsWindow(m_hWndActive))
+		if(this->m_hWndActive != NULL && ::IsWindow(this->m_hWndActive))
 		{
 			// Also - only forward the focus on to the active view
 			// if the tab isn't currently capturing the mouse
-			if(m_TabCtrl != ::GetCapture())
+			if(this->m_TabCtrl != ::GetCapture())
 			{
-				::SetFocus(m_hWndActive);
+				::SetFocus(this->m_hWndActive);
 			}
 		}
 
@@ -1109,21 +1109,21 @@ public:
 		//
 		//return m_view.PreTranslateMessage(pMsg);
 
-		return ::SendMessage(m_hWndActive, WM_FORWARDMSG, 0, lParam);
+		return ::SendMessage(this->m_hWndActive, WM_FORWARDMSG, 0, lParam);
 	}
 
 	LRESULT OnClick(int /*idCtrl*/, LPNMHDR pnmh, BOOL& bHandled)
 	{
 		// Be sure the notification is from the tab control
 		// (and not from a sibling like a list view control)
-		if(pnmh && (m_TabCtrl == pnmh->hwndFrom))
+		if(pnmh && (this->m_TabCtrl == pnmh->hwndFrom))
 		{
 			// If they left click on an item, set focus on the tab view,
 			// but only if the view was already the active tab view.
 			NMCTCITEM* item = (NMCTCITEM*)pnmh;
-			if(item && (item->iItem >= 0) && (item->iItem == m_TabCtrl.GetCurSel()))
+			if(item && (item->iItem >= 0) && (item->iItem == this->m_TabCtrl.GetCurSel()))
 			{
-				TTabCtrl::TItem* pItem = m_TabCtrl.GetItem(item->iItem);
+				auto pItem = this->m_TabCtrl.GetItem(item->iItem);
 				if(pItem->UsingTabView())
 				{
 					::SetFocus(pItem->GetTabView());
@@ -1139,13 +1139,13 @@ public:
 	{
 		// Be sure the notification is from the tab control
 		// (and not from a sibling like a list view control)
-		if(pnmh && (m_TabCtrl == pnmh->hwndFrom))
+		if(pnmh && (this->m_TabCtrl == pnmh->hwndFrom))
 		{
 			// If finished dragging, set focus on the tab view.
 			NMCTC2ITEMS* item = (NMCTC2ITEMS*)pnmh;
 			if(item && (item->iItem2 >= 0))
 			{
-				TTabCtrl::TItem* pItem = m_TabCtrl.GetItem(item->iItem2);
+				auto pItem = this->m_TabCtrl.GetItem(item->iItem2);
 				if(pItem->UsingTabView())
 				{
 					::SetFocus(pItem->GetTabView());
@@ -1161,13 +1161,13 @@ public:
 	{
 		// Be sure the notification is from the tab control
 		// (and not from a sibling like a list view control)
-		if(pnmh && (m_TabCtrl == pnmh->hwndFrom))
+		if(pnmh && (this->m_TabCtrl == pnmh->hwndFrom))
 		{
 			// If finished dragging, set focus on the tab view.
 			NMCTCITEM* item = (NMCTCITEM*)pnmh;
 			if(item && (item->iItem >= 0))
 			{
-				TTabCtrl::TItem* pItem = m_TabCtrl.GetItem(item->iItem);
+				auto pItem = this->m_TabCtrl.GetItem(item->iItem);
 				if(pItem->UsingTabView())
 				{
 					::SetFocus(pItem->GetTabView());
@@ -1183,7 +1183,7 @@ public:
 	{
 		// Be sure the notification is from the tab control
 		// (and not from a sibling like a list view control)
-		if(pnmh && (m_TabCtrl == pnmh->hwndFrom))
+		if(pnmh && (this->m_TabCtrl == pnmh->hwndFrom))
 		{
 		}
 
@@ -1195,7 +1195,7 @@ public:
 	{
 		// Be sure the notification is from the tab control
 		// (and not from a sibling like a list view control)
-		if(pnmh && (m_TabCtrl == pnmh->hwndFrom))
+		if(pnmh && (this->m_TabCtrl == pnmh->hwndFrom))
 		{
 		}
 
@@ -1207,20 +1207,20 @@ public:
 	{
 		// Be sure the notification is from the tab control
 		// (and not from a sibling like a list view control)
-		if(pnmh && (m_TabCtrl == pnmh->hwndFrom))
+		if(pnmh && (this->m_TabCtrl == pnmh->hwndFrom))
 		{
-			int nNewTab = m_TabCtrl.GetCurSel();
+			int nNewTab = this->m_TabCtrl.GetCurSel();
 
 			if(nNewTab >= 0)
 			{
-				TTabCtrl::TItem* pItem = m_TabCtrl.GetItem(nNewTab);
+				auto pItem = this->m_TabCtrl.GetItem(nNewTab);
 				if(pItem->UsingTabView())
 				{
 					HWND hWndNew = pItem->GetTabView();
-					HWND hWndOld = m_hWndActive;
+					HWND hWndOld = this->m_hWndActive;
 					if( hWndNew != hWndOld )
 					{
-						m_hWndActive = hWndNew;
+						this->m_hWndActive = hWndNew;
 
 						//UpdateLayout is going to essentially do a
 						//  "ShowWindow(hWndNew, SW_SHOW)" for us
@@ -1253,7 +1253,7 @@ public:
 		// NOTE: Derived classes should call this base class version as well
 		if(nNewTabCount == 0)
 		{
-			m_hWndActive = NULL;
+			this->m_hWndActive = NULL;
 		}
 
 		customTabOwnerClass::OnRemoveTab(nNewTabCount);
@@ -1292,17 +1292,17 @@ public:
 
 	void SetTabAreaHeight(int nNewTabAreaHeight)
 	{
-		if(m_bKeepTabsHidden)
+		if(this->m_bKeepTabsHidden)
 		{
-			m_nTabAreaHeight = 0;
+			this->m_nTabAreaHeight = 0;
 
 			T* pT = static_cast<T*>(this);
 			pT->UpdateLayout();
 			Invalidate();
 		}
-		else if(m_nTabAreaHeight != nNewTabAreaHeight)
+		else if(this->m_nTabAreaHeight != nNewTabAreaHeight)
 		{
-			m_nTabAreaHeight = nNewTabAreaHeight;
+			this->m_nTabAreaHeight = nNewTabAreaHeight;
 
 			T* pT = static_cast<T*>(this);
 			pT->UpdateLayout();
@@ -1331,64 +1331,64 @@ public:
 		*/
 
 		int nWindowPosCount=0;
-		if(m_TabCtrl) nWindowPosCount++;
-		if(m_hWndActive) nWindowPosCount++;
+		if(this->m_TabCtrl) nWindowPosCount++;
+		if(this->m_hWndActive) nWindowPosCount++;
 
 		if(nWindowPosCount > 0)
 		{
 			HDWP hdwp = BeginDeferWindowPos(nWindowPosCount);
-			DWORD dwStyle = (DWORD)m_TabCtrl.GetWindowLong(GWL_STYLE);
+			DWORD dwStyle = (DWORD)this->m_TabCtrl.GetWindowLong(GWL_STYLE);
 			if(CTCS_BOTTOM == (dwStyle & CTCS_BOTTOM))
 			{
-				if(m_TabCtrl)
+				if(this->m_TabCtrl)
 				{
 					::DeferWindowPos(
 						hdwp,
-						m_TabCtrl,
+						this->m_TabCtrl,
 						NULL,
-						rect.left, rect.bottom - m_nTabAreaHeight,
-						rect.right - rect.left, m_nTabAreaHeight,
+						rect.left, rect.bottom - this->m_nTabAreaHeight,
+						rect.right - rect.left, this->m_nTabAreaHeight,
 						SWP_NOZORDER | SWP_NOACTIVATE);
 				}
-				if(m_hWndActive)
+				if(this->m_hWndActive)
 				{
 					::DeferWindowPos(
 						hdwp,
-						m_hWndActive,
+						this->m_hWndActive,
 						NULL,
 						rect.left, rect.top,
-						rect.right - rect.left, (rect.bottom-m_nTabAreaHeight) - rect.top,
+						rect.right - rect.left, (rect.bottom-this->m_nTabAreaHeight) - rect.top,
 						SWP_NOZORDER | SWP_SHOWWINDOW);
 				}
 			}
 			else
 			{
-				if(m_TabCtrl)
+				if(this->m_TabCtrl)
 				{
 					::DeferWindowPos(
 						hdwp,
-						m_TabCtrl,
+						this->m_TabCtrl,
 						NULL,
 						rect.left, rect.top,
-						rect.right-rect.left, m_nTabAreaHeight,
+						rect.right-rect.left, this->m_nTabAreaHeight,
 						SWP_NOZORDER | SWP_NOACTIVATE);
 				}
-				if(m_hWndActive)
+				if(this->m_hWndActive)
 				{
 					::DeferWindowPos(
 						hdwp,
-						m_hWndActive,
+						this->m_hWndActive,
 						NULL,
-						rect.left, rect.top + m_nTabAreaHeight,
+						rect.left, rect.top + this->m_nTabAreaHeight,
 						rect.right - rect.left,
-						rect.bottom - (rect.top+m_nTabAreaHeight),
+						rect.bottom - (rect.top+this->m_nTabAreaHeight),
 						SWP_NOZORDER | SWP_SHOWWINDOW);
 				}
 			}
 			EndDeferWindowPos(hdwp);
 		}
 
-		m_TabCtrl.UpdateLayout();
+		this->m_TabCtrl.UpdateLayout();
 	}
 };
 
@@ -1447,11 +1447,11 @@ public:
 		//return m_view.PreTranslateMessage(pMsg);
 
 		HWND hWndFocus = ::GetFocus();
-		if(m_hWndActive != NULL && ::IsWindow(m_hWndActive) &&
-			(m_hWndActive == hWndFocus || ::IsChild(m_hWndActive, hWndFocus)))
+		if(this->m_hWndActive != NULL && ::IsWindow(this->m_hWndActive) &&
+			(this->m_hWndActive == hWndFocus || ::IsChild(this->m_hWndActive, hWndFocus)))
 		{
 			//active.PreTranslateMessage(pMsg);
-			if(::SendMessage(m_hWndActive, WM_FORWARDMSG, 0, (LPARAM)pMsg))
+			if(::SendMessage(this->m_hWndActive, WM_FORWARDMSG, 0, (LPARAM)pMsg))
 			{
 				return TRUE;
 			}
@@ -1550,11 +1550,11 @@ public:
 		//return m_view.PreTranslateMessage(pMsg);
 
 		HWND hWndFocus = ::GetFocus();
-		if(m_hWndActive != NULL && ::IsWindow(m_hWndActive) &&
-			(m_hWndActive == hWndFocus || ::IsChild(m_hWndActive, hWndFocus)))
+		if(this->m_hWndActive != NULL && ::IsWindow(this->m_hWndActive) &&
+			(this->m_hWndActive == hWndFocus || ::IsChild(this->m_hWndActive, hWndFocus)))
 		{
 			//active.PreTranslateMessage(pMsg);
-			if(::SendMessage(m_hWndActive, WM_FORWARDMSG, 0, (LPARAM)pMsg))
+			if(::SendMessage(this->m_hWndActive, WM_FORWARDMSG, 0, (LPARAM)pMsg))
 			{
 				return TRUE;
 			}

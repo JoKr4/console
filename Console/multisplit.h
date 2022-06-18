@@ -780,13 +780,13 @@ namespace WTL
 				CWindowDC dc (pT->m_hWnd);
 				BarRect.OffsetRect(this->edgeWidth, this->edgeHeight);
 
-				CBrush GhostBrush = CDCHandle::GetHalftoneBrush ();
-				if (!GhostBrush.IsNull ())
-				{
-					CBrushHandle OldBrush = dc.SelectBrush (GhostBrush);
-					dc.PatBlt (BarRect.left, BarRect.top, BarRect.Width (), BarRect.Height (), PATINVERT);
-					dc.SelectBrush (OldBrush);
-				}
+				// CBrush GhostBrush = CDCHandle::GetHalftoneBrush ();
+				// if (!GhostBrush.IsNull ())
+				// {
+				// 	CBrushHandle OldBrush = dc.SelectBrush (GhostBrush);
+				// 	dc.PatBlt (BarRect.left, BarRect.top, BarRect.Width (), BarRect.Height (), PATINVERT);
+				// 	dc.SelectBrush (OldBrush);
+				// }
 			}
 		}
 

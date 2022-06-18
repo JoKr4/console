@@ -17,7 +17,9 @@ LRESULT PageSettingsTabsColors::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, L
 
 	m_staticCursorAnim.Attach(GetDlgItem(IDC_CURSOR_ANIM));
 	m_comboCursor.Attach(GetDlgItem(IDC_COMBO_CURSOR));
+	#ifdef _USE_AERO
 	Helpers::LoadCombo(m_comboCursor, IDC_COMBO_CURSOR);
+	#endif
 	m_staticCursorColor.Attach(GetDlgItem(IDC_CURSOR_COLOR));
 
 #ifdef _USE_AERO

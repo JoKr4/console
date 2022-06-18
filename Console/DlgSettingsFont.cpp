@@ -32,7 +32,10 @@ DlgSettingsFont::DlgSettingsFont(CComPtr<IXMLDOMElement>& pOptionsRoot)
 LRESULT DlgSettingsFont::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
 	m_comboFontSmoothing.Attach(GetDlgItem(IDC_COMBO_SMOOTHING));
+
+	#ifdef _USE_AERO
 	Helpers::LoadCombo(m_comboFontSmoothing, IDC_COMBO_SMOOTHING);
+	#endif
 
 	m_fontSettings.Load(m_pOptionsRoot);
 

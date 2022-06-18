@@ -48,7 +48,10 @@ LRESULT DlgSettingsMouse::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM 
 	m_listCtrl.Attach(GetDlgItem(IDC_LIST_MOUSE_COMMANDS));
 	m_editCommand.Attach(GetDlgItem(IDC_EDIT_COMMAND));
 	m_comboButtons.Attach(GetDlgItem(IDC_COMBO_BUTTONS));
+
+	#ifdef _USE_AERO
 	Helpers::LoadCombo(m_comboButtons, IDC_COMBO_BUTTONS);
+	#endif
 
 	m_btnCtrl.Attach(GetDlgItem(IDC_CHECK_CTRL));
 	m_btnShift.Attach(GetDlgItem(IDC_CHECK_SHIFT));

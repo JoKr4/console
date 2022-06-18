@@ -37,10 +37,10 @@ LRESULT CAboutDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 
 	SetTimer(42, 40);
 #else
-	std::wstring strMsgVersion = boost::str(boost::wformat(Helpers::LoadStringW(MSG_ABOUT)) % _T(VERSION_PRODUCT));
+	std::wstring strMsgVersion = boost::str(boost::wformat(Helpers::LoadString(MSG_ABOUT)) % _T(VERSION_PRODUCT));
 
   CWindow staticMessage(GetDlgItem(IDC_STATIC_VERSION));
-  staticMessage.SetWindowText(strMsgVersion.c_str());
+  staticMessage.SetWindowText((LPCTSTR)strMsgVersion.c_str());
 #endif
 
 	CenterWindow(GetParent());

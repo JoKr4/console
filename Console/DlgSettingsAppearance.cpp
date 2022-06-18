@@ -41,11 +41,14 @@ DlgSettingsAppearance::DlgSettingsAppearance(CComPtr<IXMLDOMElement>& pOptionsRo
 LRESULT DlgSettingsAppearance::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
 	m_comboDocking.Attach(GetDlgItem(IDC_COMBO_DOCKING));
+
+	#ifdef _USE_AERO
 	Helpers::LoadCombo(m_comboDocking, IDC_COMBO_DOCKING);
 	m_comboZOrder.Attach(GetDlgItem(IDC_COMBO_ZORDER));
 	Helpers::LoadCombo(m_comboZOrder, IDC_COMBO_ZORDER);
 	m_comboState.Attach(GetDlgItem(IDC_COMBO_STATE));
 	Helpers::LoadCombo(m_comboState, IDC_COMBO_STATE);
+	#endif
 
 	m_windowSettings.Load(m_pOptionsRoot);
 	m_positionSettings.Load(m_pOptionsRoot);

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "DynamicDialog.h"
+
 class CDynamicSnippetDialog
 	: public CDynamicDialogImpl<CDynamicSnippetDialog>
 	, public CWinDataExchange<CDynamicSnippetDialog>
@@ -67,7 +69,7 @@ public:
 				static_cast<WORD>(IDC_STATIC));
 
 			this->AddEdit(
-				(*declaration)->default.c_str(),
+				(*declaration)->_default.c_str(),
 				CRect(
 					iMarginWidth + iLabelWidth + iMarginWidth,
 					rect.bottom + iTextBoxPaddingHeight + 1,

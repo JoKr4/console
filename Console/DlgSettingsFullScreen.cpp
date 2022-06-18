@@ -32,7 +32,10 @@ DlgSettingsFullScreen::DlgSettingsFullScreen(CComPtr<IXMLDOMElement>& pOptionsRo
 LRESULT DlgSettingsFullScreen::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
   m_comboFullScreenMonitor.Attach(GetDlgItem(IDC_COMBO_FULLSCREEN_MONITOR));
+
+  #ifdef _USE_AERO
 	Helpers::LoadCombo(m_comboFullScreenMonitor, IDC_COMBO_FULLSCREEN_MONITOR);
+  #endif
 
   m_fullScreenSettings.Load(m_pOptionsRoot);
 

@@ -1,4 +1,4 @@
-#include "stdAfx.h"
+#include "stdafx.h"
 
 #include "Console.h"
 #include "SelectionHandler.h"

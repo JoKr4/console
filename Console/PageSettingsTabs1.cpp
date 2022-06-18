@@ -46,7 +46,10 @@ LRESULT PageSettingsTabs1::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM
 	m_tabInitialDirEdit.SubclassWindow(GetDlgItem(IDC_TAB_INIT_DIR));
 
 	m_comboPriority.Attach(GetDlgItem(IDC_COMBO_BASE_PRIORITY));
+
+	#ifdef _USE_AERO
 	Helpers::LoadCombo(m_comboPriority, IDC_COMBO_BASE_PRIORITY);
+	#endif
 
 	DoDataExchange(DDX_LOAD);
 	return TRUE;

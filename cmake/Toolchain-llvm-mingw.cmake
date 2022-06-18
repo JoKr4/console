@@ -24,15 +24,20 @@ set(CMAKE_CXX_COMPILER ${LLVM_PREFIX}/bin/clang-cl.exe)
 SET(CMAKE_LINKER       ${LLVM_PREFIX}/bin/lld-link.exe)
 SET(CMAKE_RC_COMPILER  ${LLVM_PREFIX}/bin/llvm-rc.exe)
 
+set(CMAKE_SYSTEM_NAME Windows)
+set(CMAKE_SYSTEM_VERSION 10.0)
+set(CMAKE_SYSTEM_PROCESSOR AMD64)
+
 init_user_prop(LLVM_NATIVE_TOOLCHAIN)
 init_user_prop(MSVC_BASE)
 init_user_prop(WINSDK_BASE)
 
 set(MSVC_INCLUDE   "${MSVC_BASE}/include")
+set(WINSDK_INCLUDE "${WINSDK_BASE}/Include/10.0.19041.0")
 set(ATLMFC_INCLUDE "${MSVC_BASE}/atlmfc/include")
 set(MSVC_LIB       "${MSVC_BASE}/lib")
-set(WINSDK_INCLUDE "${WINSDK_BASE}/Include/10.0.19041.0")
 set(WINSDK_LIB     "${WINSDK_BASE}/Lib/10.0.19041.0")
+set(ATLMFC_LIB     "${MSVC_BASE}/atlmfc/lib")
 
 # https://en.wikipedia.org/wiki/Microsoft_Visual_C%2B%2B#Internal_version_numbering
 # https://clang.llvm.org/docs/UsersManual.html#microsoft-extensions
@@ -69,6 +74,7 @@ set(LINK_FLAGS
     -libpath:"${MSVC_LIB}/x64"
     -libpath:"${WINSDK_LIB}/ucrt/x64"
     -libpath:"${WINSDK_LIB}/um/x64"
+    -libpath:"${ATLMFC_LIB}/x64"
 )
 
 string(REPLACE ";" " " LINK_FLAGS "${LINK_FLAGS}")
@@ -83,3 +89,8 @@ set(CMAKE_MODULE_LINKER_FLAGS "${_CMAKE_MODULE_LINKER_FLAGS_INITIAL} ${LINK_FLAG
 set(_CMAKE_SHARED_LINKER_FLAGS_INITIAL "${CMAKE_SHARED_LINKER_FLAGS}" CACHE STRING "")
 set(CMAKE_SHARED_LINKER_FLAGS "${_CMAKE_SHARED_LINKER_FLAGS_INITIAL} ${LINK_FLAGS}" CACHE STRING "" FORCE)
 
+# CMake populates these with a bunch of unnecessary libraries, which requires
+# extra case-correcting symlinks and what not. Instead, let projects explicitly
+# control which libraries they require.
+set(CMAKE_C_STANDARD_LIBRARIES "" CACHE STRING "" FORCE)
+set(CMAKE_CXX_STANDARD_LIBRARIES "" CACHE STRING "" FORCE)

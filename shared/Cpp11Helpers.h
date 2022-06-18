@@ -1,5 +1,12 @@
 #pragma once
 
+#include <LMCONS.H>
+#include <lmapibuf.h>
+// that one defines _LMAPIBUF_
+
+#include <UserEnv.h>
+// that one defines _INC_USERENV
+
 struct GlobalFreeHelper
 {
 	void operator()(void * toFree)
