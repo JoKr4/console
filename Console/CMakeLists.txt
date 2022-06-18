@@ -97,8 +97,27 @@ target_precompile_headers(
 target_link_libraries(
   ${PROJECT_NAME}
   PUBLIC
+    kernel32
+    user32
+    gdi32
+    advapi32
+    shell32
+    ole32
+    msvcprt
+    # vvvvvvvvv 3rd party
+    Boost::boost
+    FreeImage
+    # vvvvvvvvvvv subprojects
     wtl
     TabbingFramework
-    Boost::boost
     shared
+    # vvvvvv winsdk
+    Version
+    NetAPI32
+    WinInet
+    UserEnv
+    ComDlg32
+    Imm32
+    muiload
+    Htmlhelp
 )

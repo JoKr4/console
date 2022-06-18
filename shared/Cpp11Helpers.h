@@ -1,11 +1,6 @@
 #pragma once
 
-#include <LMCONS.H>
-#include <lmapibuf.h>
-// that one defines _LMAPIBUF_
-
-#include <UserEnv.h>
-// that one defines _INC_USERENV
+#include "stdafx.h"
 
 struct GlobalFreeHelper
 {

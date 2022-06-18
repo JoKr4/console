@@ -5,6 +5,9 @@
 
 #pragma once
 
+#include <windows.h>
+#include <winver.h>
+
 #include <atlbase.h>
 #include <atlstr.h>
 #include <wtl/atlapp.h>
@@ -25,7 +28,7 @@
 #include <Psapi.h>
 #include <winuser.h>
 #include <WinCred.h>
-#include <Muiload.h>
+
 #if _MSC_VER >= 1900
 /*
 Muiload.lib(muiload.obj) : error LNK2019: unresolved external symbol _vsnwprintf referenced in function
@@ -71,11 +74,6 @@ an alternative solution is to add an additional library to your linker input, le
 #include <boost/multi_index/ordered_index.hpp>
 #include <boost/multi_index/sequenced_index.hpp>
 using namespace boost::multi_index;
-
-#include <WinInet.h>
-#if _WIN32_WINNT >= 0x0600
-#include <netlistmgr.h>
-#endif
 
 #include "../shared/Win32Exception.h"
 #include "../shared/SharedMemory.h"

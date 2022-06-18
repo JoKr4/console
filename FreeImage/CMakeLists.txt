@@ -1,8 +1,10 @@
-project(shared)
+project(FreeImage)
 
 add_library(
   ${PROJECT_NAME}
-  INTERFACE 
+  INTERFACE
+    FreeImage.h
+    FreeImagePlus.h
 )
 
 target_include_directories(
@@ -11,8 +13,8 @@ target_include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-target_precompile_headers(
+target_link_libraries(
   ${PROJECT_NAME}
   INTERFACE
-    stdafx.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/x64/FreeImagePlus.lib
 )
