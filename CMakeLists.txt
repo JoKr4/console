@@ -13,9 +13,6 @@ add_compile_definitions(_UNICODE)
 add_compile_definitions(NDEBUG)
 add_compile_definitions(FREEIMAGE_LIB)
 
-# https://docs.microsoft.com/en-us/cpp/build/reference/subsystem-specify-subsystem?view=msvc-170
-add_link_options("/SUBSYSTEM:WINDOWS")
-
 # the next one was hard...
 # before llvm_rc a preprocessor must run for the includes of .rc files
 # cmake uses the C or CXX defined compiler for that (so clang-cl) BUT gives it the same flags as for RC Compiler

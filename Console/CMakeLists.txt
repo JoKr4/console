@@ -2,6 +2,7 @@ project(Console)
 
 add_executable(
   ${PROJECT_NAME}
+  WIN32
     AboutDlg.cpp
     AboutDlg.h
     AeroTabCtrl.h
