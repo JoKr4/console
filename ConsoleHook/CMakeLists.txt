@@ -1,7 +1,5 @@
 project(ConsoleHook)
 
-add_compile_definitions(CONSOLEHOOK_API)
-
 add_library(
   ${PROJECT_NAME}
   SHARED
@@ -12,6 +10,12 @@ add_library(
     ConsoleHook.rc
     resource.h
     stdafx.cpp
+)
+
+target_compile_definitions(
+  ${PROJECT_NAME}
+  PRIVATE
+    CONSOLEHOOK_API
 )
 
 target_precompile_headers(
