@@ -18,3 +18,7 @@ target_link_libraries(
   INTERFACE
     ${CMAKE_CURRENT_SOURCE_DIR}/x64/FreeImagePlus.lib
 )
+
+install(FILES ${CMAKE_SOURCE_DIR}/setup/dlls/x64/FreeImagePlus.dll
+        DESTINATION bin
+)

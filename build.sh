@@ -1,9 +1,11 @@
 #!/bin/bash
 
 mkdir -p build
+mkdir -p install
 cd build
 
-cmake -DCMAKE_PREFIX_PATH=C:/Users/Johannes/home/Develop/lib/boost_1_76_0 \
+cmake -DCMAKE_INSTALL_PREFIX=../install \
+      -DCMAKE_PREFIX_PATH=C:/Users/Johannes/home/Develop/lib/boost_1_76_0 \
       -DLLVM_PREFIX=/mingw64 \
       -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-llvm-mingw.cmake \
       -DMSVC_BASE=C:/Users/Johannes/home/Develop/lib/msvc/14.29.30133 \
@@ -12,4 +14,4 @@ cmake -DCMAKE_PREFIX_PATH=C:/Users/Johannes/home/Develop/lib/boost_1_76_0 \
       -G "MinGW Makefiles" \
       ..
 
-cmake --build .
+cmake --build . --target install

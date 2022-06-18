@@ -115,3 +115,11 @@ target_link_libraries(
     muiload
     Htmlhelp
 )
+
+install(TARGETS ${PROJECT_NAME}
+        RUNTIME DESTINATION bin
+)
+
+install(FILES ${CMAKE_SOURCE_DIR}/setup/config/console.xml
+        DESTINATION bin
+)

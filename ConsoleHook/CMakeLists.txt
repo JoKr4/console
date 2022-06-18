@@ -31,3 +31,7 @@ target_link_libraries(
     shell32
     Boost::boost
 )
+
+install(TARGETS ${PROJECT_NAME}
+        RUNTIME DESTINATION bin
+)
