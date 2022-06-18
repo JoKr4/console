@@ -1146,7 +1146,7 @@ void ConsoleHandler::CopyConsoleTextColumn(HANDLE hStdOut, std::unique_ptr<Clipb
 	}
 
 	COORD                        coordFrom       = {0, 0};
-	COORD                        coordBufferSize = {coordEnd.X - coordStart.X + 1, 1};
+	COORD                        coordBufferSize = {static_cast<SHORT>(coordEnd.X - coordStart.X + 1), 1};
 	std::unique_ptr<CHAR_INFO[]> pScreenBuffer(new CHAR_INFO[coordBufferSize.X]);
 
 	// suppress end empty lines

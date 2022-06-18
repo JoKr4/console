@@ -20,3 +20,6 @@
 #if _WIN32_WINNT >= 0x0600
 #include <netlistmgr.h>
 #endif
+
+// clipboard etc
+#include <winuser.h>
